@@ -111,6 +111,6 @@ Please discuss major changes before starting work.
 
 ## License
 
-Copyright © 2025 Argyrios.
+Copyright © 2026 Argyrios.
 
 See the LICENSE file for licensing information.
