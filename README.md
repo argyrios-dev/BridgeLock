@@ -95,7 +95,7 @@ BridgeLock stores your PIN securely in the macOS Keychain.
 - [ ] Auto-lock timers
 - [ ] Custom lock screen themes
 - [ ] Multi-monitor improvements
-- [ ] Localization
+- [ ] Automatic activation upon opening an application
 
 ---
 
