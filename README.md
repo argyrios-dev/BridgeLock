@@ -5,11 +5,11 @@
 <h1 align="center">BridgeLock</h1>
 
 <p align="center">
-    <strong>Secure individual macOS virtual desktops with a PIN.</strong>
+    <strong>Secure a macOS virtual desktop with a PIN.</strong>
 </p>
 
 <p align="center">
-    Bring true access control to macOS virtual desktops. Protect individual workspaces without locking your entire Mac.
+    BridgeLock adds an extra layer of privacy to Mission Control by protecting a selected virtual desktop with a secure PIN, allowing you to keep sensitive workspaces private without locking your entire Mac.
 </p>
 
 <p align="center">
@@ -27,43 +27,13 @@
     <img src="Demo.gif" alt="BridgeLock Demo" width="100%">
 </p>
 
----
-
-## Screenshots
-
-<p align="center">
-    <img src="Screenshot-Locked.png" alt="Locked Desktop" width="90%">
-</p>
-
-<p align="center">
-    <em>Protected desktop requesting a PIN.</em>
-</p>
-
-<br>
-
-<p align="center">
-    <img src="Screenshot-Unlocked.png" alt="Unlocked Desktop" width="90%">
-</p>
-
-<p align="center">
-    <em>Desktop after successful authentication.</em>
-</p>
-
----
-
-## Overview
-
-Mission Control allows multiple virtual desktops, but once your Mac is unlocked every desktop is immediately accessible.
-
-BridgeLock adds an additional security layer by allowing individual virtual desktops to be protected with a secure PIN while the rest of the system remains available.
-
-Whether you're working with confidential information, sharing your screen, or separating personal and professional workspaces, BridgeLock keeps sensitive desktops protected without interrupting your workflow.
+BridgeLock protects a selected virtual desktop with a secure PIN while allowing the rest of your macOS environment to remain accessible. Designed as a lightweight native menu bar application, it integrates seamlessly with Mission Control and stores your PIN securely in the macOS Keychain.
 
 ---
 
 ## Features
 
-- Lock individual virtual desktops
+- Protect a selected virtual desktop with a secure PIN
 - Secure PIN storage using the macOS Keychain
 - Native SwiftUI application
 - Lightweight menu bar utility
@@ -77,7 +47,7 @@ Whether you're working with confidential information, sharing your screen, or se
 
 ## Installation
 
-Download the latest release from the Releases page.
+Download the latest release from the **Releases** page.
 
 1. Open the DMG.
 2. Drag **BridgeLock.app** into the **Applications** folder.
@@ -102,7 +72,7 @@ BridgeLock stores your PIN securely in the macOS Keychain.
 - No tracking
 - No cloud synchronization
 - No external servers
-- All data remains on your Mac
+- All data remains on your Mac.
 
 ---
 
@@ -119,13 +89,13 @@ BridgeLock stores your PIN securely in the macOS Keychain.
 
 ## Roadmap
 
-- Touch ID support
-- Multiple protected desktops
-- Keyboard shortcuts
-- Auto-lock timers
-- Custom lock screen themes
-- Multi-monitor improvements
-- Localization
+- [ ] Support multiple protected desktops
+- [ ] Touch ID authentication
+- [ ] Keyboard shortcuts
+- [ ] Auto-lock timers
+- [ ] Custom lock screen themes
+- [ ] Multi-monitor improvements
+- [ ] Localization
 
 ---
 
@@ -135,7 +105,7 @@ Contributions are welcome.
 
 If you discover a bug or have an idea for an improvement, please open an Issue or submit a Pull Request.
 
-For major changes, please open an Issue first to discuss the proposal.
+Please discuss major changes before starting work.
 
 ---
 
