@@ -27,11 +27,9 @@ private struct VisualEffectBackground: NSViewRepresentable {
 
     func makeNSView(context: Context) -> NSVisualEffectView {
         let effectView = NSVisualEffectView()
-
         effectView.material = .fullScreenUI
         effectView.blendingMode = .behindWindow
         effectView.state = .active
-
         return effectView
     }
 

@@ -96,18 +96,36 @@ final class LockWindow: NSPanel {
     }
 
     override func cancelOperation(_ sender: Any?) {
+        // Prevent Esc from closing the lock
     }
 
     override func performClose(_ sender: Any?) {
+        // Intentionally empty
     }
 
     override func close() {
+        // Intentionally empty – only forceClose() is allowed
     }
 
     override func miniaturize(_ sender: Any?) {
+        // Intentionally empty
     }
 
     override func zoom(_ sender: Any?) {
+        // Intentionally empty
+    }
+
+    override func becomeKey() {
+        super.becomeKey()
+        orderFrontRegardless()
+
+        // Force first responder after becoming key
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let contentView = self.contentView else { return }
+            if let secureField = self.findSecureTextField(in: contentView) {
+                self.makeFirstResponder(secureField)
+            }
+        }
     }
 
     func forceClose() {
@@ -123,19 +141,51 @@ final class LockWindow: NSPanel {
         }
 
         NSApp.activate(ignoringOtherApps: true)
-
         makeKeyAndOrderFront(nil)
         orderFrontRegardless()
 
+        // First pass right after presentation
         DispatchQueue.main.async { [weak self] in
-            guard let self else {
-                return
-            }
-
+            guard let self else { return }
             NSApp.activate(ignoringOtherApps: true)
             self.makeKey()
             self.makeMain()
             self.orderFrontRegardless()
         }
+
+        // Second pass after typical Space transition timing
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { [weak self] in
+            guard let self else { return }
+            self.makeKey()
+            self.orderFrontRegardless()
+            if let contentView = self.contentView,
+               let secureField = self.findSecureTextField(in: contentView) {
+                self.makeFirstResponder(secureField)
+            }
+        }
+
+        // Final safety pass
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { [weak self] in
+            guard let self else { return }
+            self.makeKey()
+            if let contentView = self.contentView,
+               let secureField = self.findSecureTextField(in: contentView) {
+                self.makeFirstResponder(secureField)
+            }
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func findSecureTextField(in view: NSView) -> NSSecureTextField? {
+        if let field = view as? NSSecureTextField {
+            return field
+        }
+        for subview in view.subviews {
+            if let found = findSecureTextField(in: subview) {
+                return found
+            }
+        }
+        return nil
     }
 }

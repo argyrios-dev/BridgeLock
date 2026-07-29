@@ -19,10 +19,16 @@ struct LockView: View {
     @State
     private var errorMessage: String?
 
+    @State
+    private var isAuthenticatingBiometrics = false
+
+    @FocusState
+    private var isPINFieldFocused: Bool
+
     var body: some View {
         ZStack {
             LockBackgroundView(
-                forceOpaque: !isFullScreenSpace
+                forceOpaque: false
             )
 
             VStack(spacing: 0) {
@@ -44,6 +50,12 @@ struct LockView: View {
             maxHeight: .infinity
         )
         .ignoresSafeArea()
+        .onAppear {
+            // Solo enfocamos el PIN (no lanzamos Touch ID automáticamente)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+                isPINFieldFocused = true
+            }
+        }
     }
 }
 
@@ -77,15 +89,17 @@ private extension LockView {
                 .font(.headline)
                 .foregroundStyle(.white.opacity(0.82))
 
+            // ——— PIN (principal) ———
             SecureField("PIN", text: $pin)
                 .textFieldStyle(.roundedBorder)
                 .frame(width: 260)
+                .focused($isPINFieldFocused)
                 .onChange(of: pin) { newValue in
                     pin = filteredPIN(newValue)
                     errorMessage = nil
                 }
                 .onSubmit {
-                    unlock()
+                    unlockWithPIN()
                 }
 
             if let errorMessage {
@@ -96,11 +110,28 @@ private extension LockView {
             }
 
             Button("Unlock Space") {
-                unlock()
+                unlockWithPIN()
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .frame(width: 180)
+
+            // ——— Touch ID (opción secundaria) ———
+            if BiometricAuthenticator.canEvaluate {
+                Button {
+                    Task {
+                        await unlockWithBiometrics()
+                    }
+                } label: {
+                    Label(
+                        "Unlock with \(BiometricAuthenticator.biometryTypeName)",
+                        systemImage: "touchid"
+                    )
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .disabled(isAuthenticatingBiometrics)
+            }
         }
         .padding(.horizontal, 44)
         .padding(.vertical, 40)
@@ -118,16 +149,44 @@ private extension LockView {
         )
     }
 
-    func unlock() {
+    func unlockWithPIN() {
         guard pinStore.verify(pin: pin) else {
             pin = ""
             errorMessage = "Incorrect PIN."
+            isPINFieldFocused = true
             return
         }
 
         errorMessage = nil
         pin = ""
-
         controller.unlockCurrentSpace()
+    }
+
+    @MainActor
+    func unlockWithBiometrics() async {
+        guard !isAuthenticatingBiometrics else { return }
+
+        isAuthenticatingBiometrics = true
+        errorMessage = nil
+
+        let result = await BiometricAuthenticator.authenticate(
+            reason: "Unlock the protected Space with \(BiometricAuthenticator.biometryTypeName)"
+        )
+
+        isAuthenticatingBiometrics = false
+
+        switch result {
+        case .success:
+            pin = ""
+            errorMessage = nil
+            controller.unlockCurrentSpace()
+
+        case .failure(let error):
+            if error != .cancelled, let message = error.errorDescription {
+                errorMessage = message
+            }
+            // Volvemos el foco al PIN
+            isPINFieldFocused = true
+        }
     }
 }

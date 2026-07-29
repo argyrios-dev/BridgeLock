@@ -36,6 +36,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             startupSection
+            appearanceSection          // ← nueva sección
             securitySection
             applicationSection
         }
@@ -51,6 +52,8 @@ struct SettingsView: View {
 }
 
 private extension SettingsView {
+
+    // MARK: - Startup
 
     var startupSection: some View {
         Section("Startup") {
@@ -73,6 +76,30 @@ private extension SettingsView {
                 .foregroundStyle(.secondary)
         }
     }
+
+    // MARK: - Appearance (nuevo)
+
+    var appearanceSection: some View {
+        Section("Appearance") {
+            Picker("Lock Screen Style", selection: $settings.appearance) {
+                ForEach(AppSettings.Appearance.allCases) { appearance in
+                    Text(appearance.title)
+                        .tag(appearance)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            Text(
+                settings.appearance == .translucent
+                    ? "The lock screen will use a translucent background."
+                    : "The lock screen will use a solid black background."
+            )
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+        }
+    }
+
+    // MARK: - Security PIN
 
     var securitySection: some View {
         Section("Security PIN") {
@@ -145,6 +172,8 @@ private extension SettingsView {
         }
     }
 
+    // MARK: - Application
+
     var applicationSection: some View {
         Section("Application") {
             HStack {
@@ -181,6 +210,8 @@ private extension SettingsView {
             .disabled(desktopLockController.isLocked)
         }
     }
+
+    // MARK: - Helpers
 
     var canChangePIN: Bool {
         guard pinStore.hasPIN else {
