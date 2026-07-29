@@ -90,7 +90,7 @@ BridgeLock stores your PIN securely in the macOS Keychain.
 ## Roadmap
 
 - [ ] Support multiple protected desktops
-- [ ] Touch ID authentication
+- [x] Touch ID authentication
 - [ ] Keyboard shortcuts
 - [ ] Auto-lock timers
 - [ ] Custom lock screen themes
