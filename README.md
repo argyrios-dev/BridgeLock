@@ -42,6 +42,7 @@ BridgeLock protects a selected virtual desktop with a secure PIN while allowing 
 - No internet connection required
 - Local-first architecture
 - Built exclusively for macOS
+- The menu bar tab only closes if the PIN is entered and it is not activated (Prevent accidental unlocking)
 
 ---
 
